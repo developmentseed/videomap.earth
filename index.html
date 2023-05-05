@@ -146,10 +146,10 @@ body { margin: 0; padding: 0; }
     map.on('click', () => {
         playingVideo = !playingVideo;
         const vids = [
-            map.getSource('video1'),
-            map.getSource('video2'),
-            map.getSource('video3'),
-            map.getSource('video4')
+            map.getSource('video1').getVideo(),
+            map.getSource('video2').getVideo(),
+            map.getSource('video3').getVideo(),
+            map.getSource('video4').getVideo()
         ]
         if (playingVideo) {
             vids.forEach(vid => {
