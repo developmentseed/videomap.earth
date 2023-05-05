@@ -2,17 +2,31 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Add a video</title>
+<title>We like maps, we like video, we like video on maps</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.3/proj4.min.js"></script>
 <style>
 body { margin: 0; padding: 0; }
-#map { position: absolute; top: 0; bottom: 0; width: 90%; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+#overlay {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    z-index: 9999;
+    background-color: rgba(42,42,42,0.6);
+    color: white;
+    text-align: center;
+    padding: 4px;
+
+}
 </style>
 </head>
 <body>
+<div id="overlay">
+    If the video goes out of sync, just click on the map and then click again.
+</div>
 <div id="map"></div>
 <script>
 	// TO MAKE THE MAP APPEAR YOU MUST
@@ -121,8 +135,8 @@ body { margin: 0; padding: 0; }
     const map = new mapboxgl.Map({
         container: 'map',
         minZoom: 1,
-        zoom: 12,
-        center: [-9.228512545671846, 38.75408087440849],
+        zoom: 11,
+        center: [-9.140621920671814, 38.68550735632379],
         // bearing: -96,
         style: videoStyle
     });
