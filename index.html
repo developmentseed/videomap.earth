@@ -21,11 +21,27 @@ body { margin: 0; padding: 0; }
     padding: 4px;
 
 }
+#sliderContainer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
+    padding: 4px;
+    z-index: 9999;
+}
+
+#slider {
+    width: 70%;
+}
+
 </style>
 </head>
 <body>
 <div id="overlay">
     If the video goes out of sync, just click on the map and then click again.
+</div>
+<div id="sliderContainer">
+    <input type="range" id="slider" min="0" max="100" value="0" />
 </div>
 <div id="map"></div>
 <script>
@@ -33,12 +49,6 @@ body { margin: 0; padding: 0; }
 	// ADD YOUR ACCESS TOKEN FROM
 	// https://account.mapbox.com
 	mapboxgl.accessToken = 'pk.eyJ1IjoiZ2VvaGFja2VyIiwiYSI6ImFIN0hENW8ifQ.GGpH9gLyEg0PZf3NPQ7Vrg';
-    // const coordsNW = [985632, 4721171];
-    // const coordsSE = [980512, 4726291];
-    // // proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs');
-    // const lngLatNW = proj4('EPSG:3857', 'EPSG:4326', coordsNW);
-    // const lngLatSE = proj4('EPSG:3857', 'EPSG:4326', coordsSE);
-    //console.log(lngLatNW, lngLatSE);
     const videoStyle = {
         'version': 8,
         'sources': {
@@ -141,27 +151,66 @@ body { margin: 0; padding: 0; }
         style: videoStyle
     });
 
-    let playingVideo = true;
-
-    map.on('click', () => {
-        playingVideo = !playingVideo;
+    map.on('load', () => {
         const vids = [
-            map.getSource('video1'),
-            map.getSource('video2'),
-            map.getSource('video3'),
-            map.getSource('video4')
-        ]
-        if (playingVideo) {
-            vids.forEach(vid => {
-                vid.currentTime = 0;
-                vid.play();
+            map.getSource('video1').getVideo(),
+            map.getSource('video2').getVideo(),
+            map.getSource('video3').getVideo(),
+            map.getSource('video4').getVideo()
+        ];
+        console.log('vids', vids);
+        const videoLength = vids[0].duration;
+        console.log('duration', videoLength);
+        vids.forEach(vid => {
+            vid.pause();
+            vid.addEventListener('seeked', function() {
+                console.log('seeked');
+                this.play();
+                setTimeout(() => {
+                    this.pause();
+                }, 10);
+                // this.pause();
             });
-        } else {
+        });
+        document.getElementById("slider").addEventListener("change", function() {
+            const value = this.value;
+            const seekTime = value * (videoLength / 100);
+            console.log('seek time', seekTime);
             vids.forEach(vid => {
-                vid.pause();
+                // vid.currentTime = seekTime;
+                // vid.play();
+                // setTimeout(function() {
+                //     vid.pause();
+                // }, 0)
+                vid.currentTime = seekTime;
             })
-        }
-    });
+            console.log('value', value);
+        });
+    })
+
+    // let playingVideo = true;
+    // GLOB = {};
+    // map.on('click', () => {
+    //     playingVideo = !playingVideo;
+    //     const vids = [
+    //         map.getSource('video1').getVideo(),
+    //         map.getSource('video2').getVideo(),
+    //         map.getSource('video3').getVideo(),
+    //         map.getSource('video4').getVideo()
+    //     ]
+    //     if (playingVideo) {
+    //         vids.forEach(vid => {
+    //             vid.currentTime = 0;
+    //             vid.play();
+    //         });
+    //     } else {
+    //         vids.forEach(vid => {
+    //             vid.pause();
+    //         })
+    //     }
+    // });
+
+
 </script>
 
 </body>
