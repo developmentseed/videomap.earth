@@ -55,13 +55,14 @@ body {
 }
 
 #timeSlider {
-    width: 90%;
+    width: 70%;
 }
 
 #frameTextOverlay {
     position: absolute;
     left: 0px;
     height: 80%;
+    padding: 4px;
     margin-top: 5%;
     width: 20%;
     min-width: 200px;

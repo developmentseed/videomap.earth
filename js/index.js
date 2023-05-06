@@ -67,6 +67,8 @@ function getFrameText(frames, currentTime) {
     return frameText;
 }
 
+
+
 function initializeVideoMap(data) {
     const baseUrl = data.base_url || '';
 
@@ -249,6 +251,13 @@ function initializeVideoMap(data) {
             videoElements.forEach(vid => {
                 vid.pause();
                 vid.currentTime = timeCode;
+            });
+        });
+
+        document.getElementById('speedSelect').addEventListener('change', function() {
+            const playbackRate = this.value;
+            videoElements.forEach(vid => {
+                vid.playbackRate = parseFloat(playbackRate);
             });
         });
 
