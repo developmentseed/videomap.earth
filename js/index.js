@@ -179,9 +179,11 @@ function initializeVideoMap(data) {
             if (!data.frames) return;
             const currentTime = videoElements[0].currentTime;
             const frameText = getFrameText(data.frames, currentTime);
-            document.getElementById('frameTextTitle').innerText = frameText.title;
-            document.getElementById('frameTextDescription').innerText = frameText.description;
-            document.getElementById('frameTextOverlay').classList.remove('hide');
+            if (frameText) {
+                document.getElementById('frameTextTitle').innerText = frameText.title;
+                document.getElementById('frameTextDescription').innerText = frameText.description;
+                document.getElementById('frameTextOverlay').classList.remove('hide');
+            }
         }
 
         function hideFrameText() {
