@@ -122,5 +122,17 @@ function initializeVideoMap(data) {
             playingVideo = !playingVideo;
         });
     });
+
+    document.getElementById('opacity').addEventListener('input', function() {
+        const newOpacity = parseFloat(this.value);
+        console.log(newOpacity);
+        videoLayers.forEach(layer => {
+            map.setPaintProperty(
+                layer.id,
+                'raster-opacity',
+                newOpacity
+            )
+        });
+    });
 }
 

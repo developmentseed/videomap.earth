@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    overflow-y: hidden;
 }
 
 #map {
@@ -19,4 +20,23 @@ body {
     color: white;
     text-align: center;
     padding: 4px;
+}
+
+#opacityContainer {
+    position: absolute;
+    right: 0px;
+    width: 24px;
+    height: 100%;
+    padding-top: 7.5%;
+    background-color: rgba(42,42,42,0.6);
+    color: white;
+    text-align: center;
+    z-index: 9999;
+}
+
+#opacity {
+    display: block;
+    width: 16px;
+    height: 70%;
+    appearance: slider-vertical;
 }
