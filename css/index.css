@@ -53,6 +53,18 @@ body {
     width: 90%;
 }
 
+#frameTextOverlay {
+    position: absolute;
+    left: 0px;
+    height: 80%;
+    margin-top: 5%;
+    width: 20%;
+    min-width: 200px;
+    background: rgba(42,42,42,0.4);
+    color: white;
+    z-index: 9999;
+}
+
 #opacityContainer {
     position: absolute;
     right: 0px;
@@ -70,4 +82,8 @@ body {
     width: 16px;
     height: 70%;
     appearance: slider-vertical;
+}
+
+.hide {
+    display: none;
 }

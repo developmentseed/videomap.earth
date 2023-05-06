@@ -3,6 +3,44 @@
     "base_url": "videos/",
     "center":  [-9.140621920671814, 38.68550735632379],
     "zoom": 11,
+    "frames": {
+        "0.0": {
+            "title": "January, 2021",
+            "description": "Here we can put random title and description for frames."
+        },
+        "1.0": {
+            "title": "February, 2021",
+            "description": "Lorem ipsum description"
+        },
+        "2.0": {
+            "title": "March, 2021",
+            "description": "Lorem ipsum description"
+        },
+        "3.0": {
+            "title": "April, 2021",
+            "description": "Lorem ipsum description"
+        },
+        "4.0": {
+            "title": "May, 2021",
+            "description": "Lorem ipsum description"
+        },
+        "5.0": {
+            "title": "June, 2021",
+            "description": "Lorem ipsum description"
+        },
+        "6.0": {
+            "title": "July, 2021",
+            "description": "Lorem ipsum description"
+        },
+        "7.0": {
+            "title": "August, 2021",
+            "description": "Lorem ipsum description"
+        },
+        "8.0": {
+            "title": "September, 2021",
+            "description": "You made it to the end, yay."
+        }
+    },
 	"features": [{
 			"type": "Feature",
 			"bbox": [-9.228512545671846, 38.68550735632379, -9.140621920671814, 38.75408087440849],

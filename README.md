@@ -12,11 +12,12 @@ The default location for the video file is in [videos/videos.geojson](videos/vid
 
 So, if you are running the site at http://localhost:9000 and have your GeoJSON served at http://example.com/myvideos.geojson, you can go to http://localhost:9000/?url=http://example.com/myvideos.geojson . You will need to ensure that your GeoJSON file as well as all videos are being served with headers to enable CORS.
 
-The GeoJSON feature collection MUST HAVE the following top-level properties:
+The GeoJSON feature collection has the following top-level properties:
 
  - `base_url`: The Base URL for the video files. You can omit this or leave as empty string if specifying absolute URLs for videos.
- - `center`: The point the map should be centered on when loading
- - `zoom`: The zoom level of the map when loading
+ - `center`: REQUIRED: The point the map should be centered on when loading
+ - `zoom`: REQUIRED: The zoom level of the map when loading
+ - `frames`: Optional: Object containing metadata to be displayed per frame / timecode. See `videos.geojson` for an example.
 
 The FeatureCollection must also contain a property called `features` which is an array of GeoJSON features. Each feature MUST:
 

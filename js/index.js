@@ -56,6 +56,17 @@ function getVideoCoords(polygonCoords) {
     ];
 }
 
+function getFrameText(frames, currentTime) {
+    let frameText = false;
+    for (const prop in frames) {
+        const frameTimecode = parseFloat(prop);
+        if (currentTime > frameTimecode) {
+            frameText = frames[prop];
+        }
+    }
+    return frameText;
+}
+
 function initializeVideoMap(data) {
     const baseUrl = data.base_url || '';
     const videoSources = data.features.reduce((acc, val, index) => {
@@ -133,9 +144,11 @@ function initializeVideoMap(data) {
         });
         videoElements[0].addEventListener('play', function() {
             document.getElementById('playButton').innerHTML = PAUSE;
+            hideFrameText();
         });
         videoElements[0].addEventListener('pause', function() {
             document.getElementById('playButton').innerHTML = PLAY;
+            showFrameText();
         });
         videoElements[0].addEventListener('timeupdate', function() {
             const currentTime = this.currentTime;
@@ -160,6 +173,20 @@ function initializeVideoMap(data) {
                     vid.play();
                 });
             }
+        }
+
+        function showFrameText() {
+            if (!data.frames) return;
+            const currentTime = videoElements[0].currentTime;
+            const frameText = getFrameText(data.frames, currentTime);
+            document.getElementById('frameTextTitle').innerText = frameText.title;
+            document.getElementById('frameTextDescription').innerText = frameText.description;
+            document.getElementById('frameTextOverlay').classList.remove('hide');
+        }
+
+        function hideFrameText() {
+            if (!data.frames) return;
+            document.getElementById('frameTextOverlay').classList.add('hide');
         }
 
         document.getElementById('playButton').addEventListener('click', function() {
