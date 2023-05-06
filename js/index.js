@@ -60,7 +60,7 @@ function getFrameText(frames, currentTime) {
     let frameText = false;
     for (const prop in frames) {
         const frameTimecode = parseFloat(prop);
-        if (currentTime > frameTimecode) {
+        if (currentTime >= frameTimecode) {
             frameText = frames[prop];
         }
     }

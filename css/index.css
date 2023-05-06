@@ -33,6 +33,11 @@ body {
     padding: 4px;
 }
 
+#overlay a {
+    color: #fff;
+    font-weight: bold;
+}
+
 #overlay p {
     padding: 0;
     margin: 0;
