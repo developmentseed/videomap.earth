@@ -3,6 +3,8 @@
 // https://account.mapbox.com
 mapboxgl.accessToken = 'pk.eyJ1IjoiZ2VvaGFja2VyIiwiYSI6ImFIN0hENW8ifQ.GGpH9gLyEg0PZf3NPQ7Vrg';
 const DATA_URL = getUrlFromUrl() || "videos/videos.geojson";
+const PLAY = '▶';
+const PAUSE = '⏸';
 
 fetch(DATA_URL)
     .then(response => response.json())
@@ -117,10 +119,37 @@ function initializeVideoMap(data) {
         });
         videoElements.forEach(videoElement => {
             videoElement.pause();
+            videoElement.addEventListener('seeked', function() {
+                console.log('current time', this.currentTime);
+                if (this.paused) {
+                    console.log('is paused');
+                    this.play();
+                    setTimeout(() => {
+                        this.pause();
+                    }, 10);
+                }
+            });
+
         });
-        let playingVideo = false;
+        videoElements[0].addEventListener('play', function() {
+            document.getElementById('playButton').innerHTML = PAUSE;
+        });
+        videoElements[0].addEventListener('pause', function() {
+            document.getElementById('playButton').innerHTML = PLAY;
+        });
+        videoElements[0].addEventListener('timeupdate', function() {
+            const currentTime = this.currentTime;
+            const percent = (currentTime / this.duration) * 100;
+            document.getElementById('timeSlider').value = parseInt(percent);
+        });
+        
         map.on('click', () => {
+            togglePlay();
+        });
+
+        function togglePlay() {
             const currentTime = videoElements[0].currentTime;
+            const playingVideo = !videoElements[0].paused;
             if (playingVideo) {
                 videoElements.forEach(vid => {
                     vid.pause();
@@ -131,8 +160,21 @@ function initializeVideoMap(data) {
                     vid.play();
                 });
             }
-            playingVideo = !playingVideo;
+        }
+
+        document.getElementById('playButton').addEventListener('click', function() {
+            togglePlay();
         });
+
+        document.getElementById('timeSlider').addEventListener('change', function() {
+            console.log(this.value);
+            const timeCode = (this.value / 100) * videoElements[0].duration;
+            videoElements.forEach(vid => {
+                vid.pause();
+                vid.currentTime = timeCode;
+            });
+        });
+
     });
 
     document.getElementById('opacity').addEventListener('input', function() {

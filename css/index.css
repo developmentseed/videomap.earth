@@ -1,3 +1,12 @@
+html {
+    box-sizing: border-box;
+}
+  
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+  
+
 body {
     margin: 0;
     padding: 0;
@@ -15,12 +24,33 @@ body {
 #overlay {
     position: absolute;
     top: 0px;
-    width: 100%;
+    left: 10%;
+    width: 80%;
     z-index: 9999;
     background-color: rgba(42,42,42,0.6);
     color: white;
     text-align: center;
     padding: 4px;
+}
+
+#overlay p {
+    padding: 0;
+    margin: 0;
+}
+
+#playButton {
+    border: 2px solid #fff;
+    border-radius: 12px;
+    padding: 6px;
+    cursor: pointer;
+}
+
+#timeSliderContainer {
+    width: 80%;
+}
+
+#timeSlider {
+    width: 90%;
 }
 
 #opacityContainer {
