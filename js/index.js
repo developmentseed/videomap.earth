@@ -69,6 +69,7 @@ function getFrameText(frames, currentTime) {
 
 function initializeVideoMap(data) {
     const baseUrl = data.base_url || '';
+    let DONT_FLICKER = false; // This is a very weird variable
     const videoSources = data.features.reduce((acc, val, index) => {
         console.log(acc, val, index);
         const sourceId = `video${index}`;
@@ -134,6 +135,7 @@ function initializeVideoMap(data) {
                 console.log('current time', this.currentTime);
                 if (this.paused) {
                     console.log('is paused');
+                    DONT_FLICKER = true;
                     this.play();
                     setTimeout(() => {
                         this.pause();
@@ -143,8 +145,12 @@ function initializeVideoMap(data) {
 
         });
         videoElements[0].addEventListener('play', function() {
-            document.getElementById('playButton').innerHTML = PAUSE;
-            hideFrameText();
+            if (!DONT_FLICKER) {
+                document.getElementById('playButton').innerHTML = PAUSE;
+                hideFrameText();
+            } else {
+                DONT_FLICKER = false;
+            }
         });
         videoElements[0].addEventListener('pause', function() {
             document.getElementById('playButton').innerHTML = PLAY;
@@ -192,10 +198,11 @@ function initializeVideoMap(data) {
         }
 
         document.getElementById('playButton').addEventListener('click', function() {
+            DONT_FLICKER = false;
             togglePlay();
         });
 
-        document.getElementById('timeSlider').addEventListener('change', function() {
+        document.getElementById('timeSlider').addEventListener('input', function() {
             console.log(this.value);
             const timeCode = (this.value / 100) * videoElements[0].duration;
             videoElements.forEach(vid => {
