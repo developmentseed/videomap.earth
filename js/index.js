@@ -11,7 +11,11 @@ fetch(DATA_URL)
         initializeVideoMap(geojson);
     })
     .catch(err => {
-        alert("Failed to fetch URL. If you passed a custom url parameter in the query string, check if the URL is valid and serves valid CORS headers");
+        alert(`
+            Failed to fetch URL.
+            If you passed a custom url parameter in the query string,
+            check if the URL is valid and serves valid CORS headers
+        `);
     });
 
 function getUrlFromUrl() {
