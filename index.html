@@ -1,168 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>We like maps, we like video, we like video on maps</title>
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-<link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.3/proj4.min.js"></script>
+    <meta charset="utf-8">
+    <title>We like maps, we like video, we like video on maps</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    <link rel="stylesheet" href="css/index.css" />
 <style>
-body { margin: 0; padding: 0; }
-#map { position: absolute; top: 0; bottom: 0; width: 100%; }
-#overlay {
-    position: absolute;
-    top: 0px;
-    width: 100%;
-    z-index: 9999;
-    background-color: rgba(42,42,42,0.6);
-    color: white;
-    text-align: center;
-    padding: 4px;
 
-}
 </style>
 </head>
 <body>
 <div id="overlay">
-    If the video goes out of sync, just click on the map and then click again.
+    Click on the map to start. If the video goes out of sync, just click on the map and then click again.
 </div>
 <div id="map"></div>
-<script>
-	// TO MAKE THE MAP APPEAR YOU MUST
-	// ADD YOUR ACCESS TOKEN FROM
-	// https://account.mapbox.com
-	mapboxgl.accessToken = 'pk.eyJ1IjoiZ2VvaGFja2VyIiwiYSI6ImFIN0hENW8ifQ.GGpH9gLyEg0PZf3NPQ7Vrg';
-    // const coordsNW = [985632, 4721171];
-    // const coordsSE = [980512, 4726291];
-    // // proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs');
-    // const lngLatNW = proj4('EPSG:3857', 'EPSG:4326', coordsNW);
-    // const lngLatSE = proj4('EPSG:3857', 'EPSG:4326', coordsSE);
-    //console.log(lngLatNW, lngLatSE);
-    const videoStyle = {
-        'version': 8,
-        'sources': {
-            'satellite': {
-                'type': 'raster',
-                'url': 'mapbox://mapbox.satellite',
-                'tileSize': 256
-            },
-            'video1': {
-                'type': 'video',
-                'urls': [
-                    'videos/videomap-12-1943-1569.webm'
-                ],
-                'coordinates': [
-                    [-9.228512545671846, 38.75408087440849],
-                    [-9.140621920671814, 38.75408087440849],
-                    [-9.140621920671814, 38.68550735632379],
-                    [-9.228512545671846, 38.68550735632379],
-                ]
-            },
-            'video2': {
-                'type': 'video',
-                'urls': [
-                    'videos/videomap-12-1943-1570.webm'
-                ],
-                'coordinates': [
-                    [-9.228512545671846, 38.68550735632379],
-                    [-9.140621920671814, 38.68550735632379],
-				    [-9.140621920671814, 38.61686805793746],
-                    [-9.228512545671846, 38.61686805793746]
-                ]
-            },
-            'video3': {
-                'type': 'video',
-                'urls': [
-                    'videos/videomap-12-1944-1569.webm'
-                ],
-                'coordinates': [
-                    [-9.140621920671814, 38.75408087440849],
-                    [-9.052731295671817, 38.75408087440849],
-                    [-9.052731295671817, 38.68550735632379],
-                    [-9.140621920671814, 38.68550735632379],                    
-                ]
-            },
-            'video4': {
-                'type': 'video',
-                'urls': [
-                    'videos/videomap-12-1944-1570.webm'
-                ],
-                'coordinates': [
-                    [-9.140621920671814, 38.68550735632379],
-                    [-9.052731295671817, 38.68550735632379],
-                    [-9.052731295671817, 38.61686805793746],
-                    [-9.140621920671814, 38.61686805793746],
-                ]
-            }
-        },
-        'layers': [
-            {
-                'id': 'background',
-                'type': 'background',
-                'paint': {
-                    'background-color': 'rgb(4,7,14)'
-                }
-            },
-            {
-                'id': 'satellite',
-                'type': 'raster',
-                'source': 'satellite'
-            },
-            {
-                'id': 'video1',
-                'type': 'raster',
-                'source': 'video1'
-            },
-            {
-                'id': 'video2',
-                'type': 'raster',
-                'source': 'video2'
-            },
-            {
-                'id': 'video3',
-                'type': 'raster',
-                'source': 'video3'
-            },
-            {
-                'id': 'video4',
-                'type': 'raster',
-                'source': 'video4'
-            },
-        ]
-    };
+<script src="js/index.js"></script>
 
-    const map = new mapboxgl.Map({
-        container: 'map',
-        minZoom: 1,
-        zoom: 11,
-        center: [-9.140621920671814, 38.68550735632379],
-        // bearing: -96,
-        style: videoStyle
-    });
-
-    let playingVideo = true;
-
-    map.on('click', () => {
-        playingVideo = !playingVideo;
-        const vids = [
-            map.getSource('video1').getVideo(),
-            map.getSource('video2').getVideo(),
-            map.getSource('video3').getVideo(),
-            map.getSource('video4').getVideo()
-        ]
-        if (playingVideo) {
-            vids.forEach(vid => {
-                vid.currentTime = 0;
-                vid.play();
-            });
-        } else {
-            vids.forEach(vid => {
-                vid.pause();
-            })
-        }
-    });
-</script>
 
 </body>
 </html>

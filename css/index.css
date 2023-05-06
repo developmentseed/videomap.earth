@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+#overlay {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    z-index: 9999;
+    background-color: rgba(42,42,42,0.6);
+    color: white;
+    text-align: center;
+    padding: 4px;
+}
