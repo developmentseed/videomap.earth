@@ -69,9 +69,17 @@ function getFrameText(frames, currentTime) {
 
 function initializeVideoMap(data) {
     const baseUrl = data.base_url || '';
-    let DONT_FLICKER = false; // This is a very weird variable
+
+    // This is a very weird variable, I apologize. The problem is that we have this weird hack
+    // on video seeked event where we need to play the video and pause it immediately, to 
+    // make sure that the video frame updates. The problem is, we don't want to trigger normal
+    // play / pause events in that case, because we are not "really" playing the video.
+    // So we use this weird-as-hell DONT_FLICKER global-ish variable to keep track of state,
+    // of whether we DONT WANT TO FLICKER. This is most likely awful.
+    let DONT_FLICKER = false;
+
+    // construct video sources to add to style
     const videoSources = data.features.reduce((acc, val, index) => {
-        console.log(acc, val, index);
         const sourceId = `video${index}`;
         const coords = getVideoCoords(val.geometry.coordinates[0]);
         acc[sourceId] = {
@@ -83,6 +91,8 @@ function initializeVideoMap(data) {
         };
         return acc;
     }, {});
+
+    // construct layers array to add to style
     const videoLayers = data.features.map((val, index) => {
         return {
             'id': `video${index}`,
@@ -90,7 +100,8 @@ function initializeVideoMap(data) {
             'source': `video${index}`
         };
     });
-    console.log('sources', videoSources);
+
+    // construct mapbox style object
     const videoStyle = {
         'version': 8,
         'sources': {
@@ -117,6 +128,7 @@ function initializeVideoMap(data) {
         ]
     };
     
+    // create map
     const map = new mapboxgl.Map({
         container: 'map',
         minZoom: 1,
@@ -125,17 +137,34 @@ function initializeVideoMap(data) {
         style: videoStyle
     });
     
+
     map.on('load', function() {
+        // on map load, when the video sources are available, we need to
+        // fetch all the html video elements, and attach event handlers
         const videoElements = videoLayers.map(layer => layer.id).map(sourceId => {
             return map.getSource(sourceId).getVideo();
         });
+
         videoElements.forEach(videoElement => {
+            // start the videos in a paused state.
+            // remove this line if you want the video to autoplay
             videoElement.pause();
+
+            // when we seek to a time-code in the video,
+            // for eg. when using the time-slider,
+            // we need to make sure that the video frame at that point
+            // is displayed. For this, we need to do this strange hack, where
+            // we need ot play the video and pause it almost immediately,
+            // to get the display frame to update correctly.
             videoElement.addEventListener('seeked', function() {
-                console.log('current time', this.currentTime);
                 if (this.paused) {
-                    console.log('is paused');
+
+                    // set the DONT_FLICKER var to true
+                    // which will prevent the play button toggling
+                    // or the frame text display hiding and showing in a flicker
                     DONT_FLICKER = true;
+
+                    // play the video and immediately pause it in 10ms, to show the frame.
                     this.play();
                     setTimeout(() => {
                         this.pause();
@@ -144,6 +173,10 @@ function initializeVideoMap(data) {
             });
 
         });
+
+        // For the next few, we only need to attach events to the first video element.
+        // on play, show pause on the button and hide any frame text if it exists.
+        // Unless DONT_FLICKER is true, then don't do anything.
         videoElements[0].addEventListener('play', function() {
             if (!DONT_FLICKER) {
                 document.getElementById('playButton').innerHTML = PAUSE;
@@ -152,10 +185,14 @@ function initializeVideoMap(data) {
                 DONT_FLICKER = false;
             }
         });
+
+        // on video pause, set button to play icon, show text for current time-code / frame.
         videoElements[0].addEventListener('pause', function() {
             document.getElementById('playButton').innerHTML = PLAY;
             showFrameText();
         });
+
+        // whenever the video timecode updates, we need to update the time-slider range to the correct poing.
         videoElements[0].addEventListener('timeupdate', function() {
             const currentTime = this.currentTime;
             const percent = (currentTime / this.duration) * 100;
@@ -166,6 +203,7 @@ function initializeVideoMap(data) {
             togglePlay();
         });
 
+        // toggles playing / pausing of the videos
         function togglePlay() {
             const currentTime = videoElements[0].currentTime;
             const playingVideo = !videoElements[0].paused;
@@ -181,6 +219,7 @@ function initializeVideoMap(data) {
             }
         }
 
+        // function to show text at the current frame
         function showFrameText() {
             if (!data.frames) return;
             const currentTime = videoElements[0].currentTime;
@@ -192,18 +231,20 @@ function initializeVideoMap(data) {
             }
         }
 
+        // hide div showing frame text
         function hideFrameText() {
             if (!data.frames) return;
             document.getElementById('frameTextOverlay').classList.add('hide');
         }
 
+        // toggle play on clicking play button
         document.getElementById('playButton').addEventListener('click', function() {
             DONT_FLICKER = false;
             togglePlay();
         });
 
+        // handle user updating time-slider range input
         document.getElementById('timeSlider').addEventListener('input', function() {
-            console.log(this.value);
             const timeCode = (this.value / 100) * videoElements[0].duration;
             videoElements.forEach(vid => {
                 vid.pause();
@@ -213,9 +254,9 @@ function initializeVideoMap(data) {
 
     });
 
+    // handle opacity slider
     document.getElementById('opacity').addEventListener('input', function() {
         const newOpacity = parseFloat(this.value);
-        console.log(newOpacity);
         videoLayers.forEach(layer => {
             map.setPaintProperty(
                 layer.id,
