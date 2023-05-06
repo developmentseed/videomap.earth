@@ -43,7 +43,7 @@ function getVideoCoords(polygonCoords) {
 }
 
 function initializeVideoMap(data) {
-    const baseUrl = data.base_url;
+    const baseUrl = data.base_url || '';
     const videoSources = data.features.reduce((acc, val, index) => {
         console.log(acc, val, index);
         const sourceId = `video${index}`;
@@ -94,8 +94,8 @@ function initializeVideoMap(data) {
     const map = new mapboxgl.Map({
         container: 'map',
         minZoom: 1,
-        zoom: 11,
-        center: [-9.140621920671814, 38.68550735632379],
+        zoom: data.zoom,
+        center: data.center,
         style: videoStyle
     });
     
