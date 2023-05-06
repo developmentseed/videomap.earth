@@ -8,7 +8,9 @@ Experiments with overlaying time-series satellite imagery as video over maps.
 
 The frontend fetches a GeoJSON FeatureCollection representing the video files that need to be displayed alongwith their bounding boxes.
 
-The default location for the video file is in [videos/videos.geojson](videos/videos.geojson). If you want to fetch from somewhere else, edit the value for `DATA_URL` in [js/index.js](js/index.js).
+The default location for the video file is in [videos/videos.geojson](videos/videos.geojson). If you want to fetch from somewhere else, you can pass a custom `url` parameter in the querystring for the page.
+
+So, if you are running the site at http://localhost:9000 and have your GeoJSON served at http://example.com/myvideos.geojson, you can go to http://localhost:9000/?url=http://example.com/myvideos.geojson . You will need to ensure that your GeoJSON file as well as all videos are being served with headers to enable CORS.
 
 The GeoJSON feature collection MUST HAVE the following top-level properties:
 

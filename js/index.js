@@ -2,14 +2,22 @@
 // ADD YOUR ACCESS TOKEN FROM
 // https://account.mapbox.com
 mapboxgl.accessToken = 'pk.eyJ1IjoiZ2VvaGFja2VyIiwiYSI6ImFIN0hENW8ifQ.GGpH9gLyEg0PZf3NPQ7Vrg';
-const DATA_URL = "videos/videos.geojson";
+const DATA_URL = getUrlFromUrl() || "videos/videos.geojson";
 
-fetch("videos/videos.geojson")
+fetch(DATA_URL)
     .then(response => response.json())
     .then(geojson => {
         console.log('geojson', geojson);
         initializeVideoMap(geojson);
+    })
+    .catch(err => {
+        alert("Failed to fetch URL. If you passed a custom url parameter in the query string, check if the URL is valid and serves valid CORS headers");
     });
+
+function getUrlFromUrl() {
+    const searchParams = new URLSearchParams(window.location.search);
+    return searchParams.get('url');
+}
 
 function getNW(coords) {
     const lng = Math.min(...coords.map(c => c[0]));
