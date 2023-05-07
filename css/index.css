@@ -62,9 +62,9 @@ body {
 #frameTextOverlay {
     position: absolute;
     left: 0px;
-    height: 80%;
+    top: 40%;
+    height: 60%;
     padding: 4px;
-    margin-top: 5%;
     width: 20%;
     min-width: 200px;
     background: rgba(42,42,42,0.4);
