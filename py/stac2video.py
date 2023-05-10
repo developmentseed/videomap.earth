@@ -187,13 +187,4 @@ def stac_tile(
 
 
 if __name__ == "__main__":
-    # stac_tile()
-    stac_tile(
-        dst=Path("/home/tam/Desktop/videomap"),
-        coordx=-9.15032,
-        coordy=38.72595,
-        start="2022-01-01",
-        end="2022-01-12",
-        zoom=11,
-        level_down=2,
-    )
+    stac_tile()
