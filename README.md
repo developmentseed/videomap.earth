@@ -2,8 +2,6 @@
 
 Experiments with overlaying time-series satellite imagery as video over maps.
 
-**TODO**: Add instructions on generating video files using `stac2video`.
-
 ### Frontend Setup
 
 The frontend fetches a GeoJSON FeatureCollection representing the video files that need to be displayed alongwith their bounding boxes.
@@ -36,3 +34,41 @@ To run, use your favourite method to serve a local web-server in this folder. Wi
 ```
 
 Then, go to http://localhost:9000 in your browser.
+
+### Video creation
+
+The `stac2video.py` utility can be used to prepare videos from Sentinel-2 imagery. The utility also creates a `videos.geojson` file, which will be used by the frontend to place the videos on the map.
+
+The utility will create videos from bi-weekly composites. Each frame in the video will be imagery from a two-weeks interval, where the least cloudy pixel is selected for the imagery from each two weeks.
+
+The key input the user needs to specify is location, a date range, and the number of tiles to create at a specified zoom level. The output of the script will be written to a local folder that is also specified by the user.
+
+The following shows a list of the input parameters
+
+```
+>>> stac2video.py --help
+Usage: stac2video.py [OPTIONS]
+
+Options:
+  --dst PATH        Directory to which output will be written.  [required]
+  --coordx FLOAT    Longitude coordinate to selectthe central TMS tile
+                    [required]
+  --coordy FLOAT    Latitude coordinate to select the central TMS tile
+                    [required]
+  --zoom INTEGER    Zoom level of the target TMS tiles  [required]
+  --start TEXT      Start date for video in YYYY-MM-DD  [required]
+  --end TEXT        End date for video in YYYY-MM-DD  [required]
+  --height INTEGER  How many tiles to include in Y direction
+  --width INTEGER   How many tiles to include in X direction
+  --help            Show this message and exit.
+```
+
+And one example is the following:
+
+
+```
+python3 stac2video.py --dst=./videos --coordx=-9.15032 --coordy=38.72595 --start=2023-01-01 --end=2023-05-01 --zoom=12 --width=5 --height=3
+```
+
+### Deploying the data
+The only thing needed to show the videos on a map is to either run the 
