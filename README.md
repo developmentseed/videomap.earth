@@ -67,8 +67,12 @@ And one example is the following:
 
 
 ```
-python3 stac2video.py --dst=./videos --coordx=-9.15032 --coordy=38.72595 --start=2023-01-01 --end=2023-05-01 --zoom=12 --width=5 --height=3
+python3 stac2video.py --dst=/path/to/exiting/folder/videos --coordx=-9.15032 --coordy=38.72595 --start=2023-01-01 --end=2023-05-01 --zoom=12 --width=5 --height=3
 ```
 
 ### Deploying the data
-The only thing needed to show the videos on a map is to either run the 
+The only thing needed to show the videos online is to make the output of the `stac2video.py` utility accessible through the web.
+
+Once the folder is accessible, you can point videomap.earth to the location of the automatically generated `videos.geojson` file in the folder.
+
+https://videomap.earth/?url=https://s3.eu-west-2.amazonaws.com/videomap.earth/videos/videos.geojson
