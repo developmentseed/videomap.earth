@@ -107,22 +107,27 @@ def tile_center(tile: morecantile.commons.Tile) -> Tuple[float]:
 @click.option(
     "--coordx",
     required=True,
-    help="Longitude coordinate to select TMS tile",
+    help="Longitude coordinate to selectthe central TMS tile",
     type=float,
 )
 @click.option(
-    "--coordy", required=True, help="Latitude coordinate to select TMS tile", type=float
+    "--coordy",
+    required=True,
+    help="Latitude coordinate to select the central TMS tile",
+    type=float,
 )
-@click.option("--zoom", required=True, help="Zoom level of TMS tile", type=int)
+@click.option(
+    "--zoom", required=True, help="Zoom level of the target TMS tiles", type=int
+)
 @click.option(
     "--start", required=True, help="Start date for video in YYYY-MM-DD", type=str
 )
 @click.option("--end", required=True, help="End date for video in YYYY-MM-DD", type=str)
 @click.option(
-    "--level_down",
-    default=1,
-    help="How many TMX zoom levels to go down from main zoom level",
-    type=int,
+    "--height", default=3, help="How many tiles to include in Y direction", type=int
+)
+@click.option(
+    "--width", default=3, help="How many tiles to include in X direction", type=int
 )
 def stac_tile(
     dst: Path,
@@ -131,17 +136,23 @@ def stac_tile(
     zoom: int,
     start: str,
     end: str,
-    level_down: int = 1,
+    width: int,
+    height: int,
 ):
-    original_tile = tms.tile(coordx, coordy, zoom)
+    orig = tms.tile(coordx, coordy, zoom)
 
-    tiles = tms.children(original_tile, zoom=zoom + level_down)
+    tiles = []
+    for i in range(-1 * int(width / 2), int(width / 2) + 1):
+        for j in range(-1 * int(height / 2), int(height / 2) + 1):
+            tiles.append(morecantile.Tile(orig.x + i, orig.y + j, orig.z))
+
+    print(f"Collecting videos for {len(tiles)} tiles")
 
     videos = {
         "type": "FeatureCollection",
         "name": "Videomap",
         "base_url": "videos/",
-        "center": tile_center(original_tile),
+        "center": tile_center(orig),
         "zoom": zoom - 1,
         "frames": {},
         "features": [],
@@ -150,11 +161,8 @@ def stac_tile(
     for tile in tiles:
         composites = fetch_composites(tile, start, end)
 
-        # Create video path
-        video_path = dst / "videos"
-        video_path.mkdir(exist_ok=True)
-        filepath = video_path / f"videomap-{tile.z}-{tile.x}-{tile.y}.mp4"
-        filepathwebm = video_path / f"videomap-{tile.z}-{tile.x}-{tile.y}.webm"
+        filepath = dst / f"videomap-{tile.z}-{tile.x}-{tile.y}.mp4"
+        filepathwebm = dst / f"videomap-{tile.z}-{tile.x}-{tile.y}.webm"
 
         # Create mp4 video
         out = cv2.VideoWriter(
@@ -181,6 +189,13 @@ def stac_tile(
         feat["properties"]["url"] = f"videomap-{tile.z}-{tile.x}-{tile.y}.webm"
 
         videos["features"].append(feat)
+
+    # Add date information per frame
+    for index, date in enumerate(composites.time.data):
+        videos["frames"][str(index)] = {
+            "title": str(date)[:10],
+            "description": f"Sentinel-2 composite of images from the two weeks prior to {str(date)[:10]}.",
+        }
 
     with open(dst / f"videos.geojson", "w") as f:
         json.dump(videos, f)
