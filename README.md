@@ -60,6 +60,10 @@ Options:
   --end TEXT        End date for video in YYYY-MM-DD  [required]
   --height INTEGER  How many tiles to include in Y direction
   --width INTEGER   How many tiles to include in X direction
+  --interval TEXT   Time interval to use for compositing imagery. Defaults to
+                    14D. This will be passed to the `resample` function on the
+                    time dimension from xarray. See https://docs.xarray.dev/en
+                    /stable/generated/xarray.DataArray.resample.html
   --help            Show this message and exit.
 ```
 
@@ -67,7 +71,7 @@ And one example is the following:
 
 
 ```
-python3 stac2video.py --dst=/path/to/exiting/folder/videos --coordx=-9.15032 --coordy=38.72595 --start=2023-01-01 --end=2023-05-01 --zoom=12 --width=5 --height=3
+./stac2video.py --dst=/path/to/exiting/folder/videos --coordx=-9.15032 --coordy=38.72595 --start=2023-01-01 --end=2023-05-01 --zoom=12 --width=5 --height=3
 ```
 
 ### Deploying the data

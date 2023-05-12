@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import json
 from pathlib import Path
 from typing import Tuple
@@ -36,7 +38,7 @@ tms = morecantile.tms.get("WebMercatorQuad")
 
 
 def fetch_composites(
-    tile: morecantile.commons.Tile, start: str, end: str
+    tile: morecantile.commons.Tile, start: str, end: str, interval: str = "14D"
 ) -> xarray.DataArray:
     search = catalog.search(
         collections=[COLLECTION],
@@ -75,13 +77,13 @@ def fetch_composites(
     # Create composites with cloud mask
     composites_using_cloud_mask = (
         data.where(~cloud_mask)
-        .resample(time="14D", skipna=True, origin=start, closed="right")
+        .resample(time=interval, skipna=True, origin=start, closed="right")
         .median("time")
     )
 
     # Create composites without cloud mask
     composites_using_all_pixels = data.resample(
-        time="14D", skipna=True, origin=start, closed="right"
+        time=interval, skipna=True, origin=start, closed="right"
     ).median("time")
 
     # Fill pixels in cloud masked composites with pixels from full composite
@@ -129,6 +131,11 @@ def tile_center(tile: morecantile.commons.Tile) -> Tuple[float]:
 @click.option(
     "--width", default=3, help="How many tiles to include in X direction", type=int
 )
+@click.option(
+    "--interval",
+    default="14D",
+    help="Time interval to use for compositing imagery. Defaults to 14D. This will be passed to the `resample` function on the time dimension from xarray. See https://docs.xarray.dev/en/stable/generated/xarray.DataArray.resample.html",
+)
 def stac_tile(
     dst: Path,
     coordx: float,
@@ -138,7 +145,13 @@ def stac_tile(
     end: str,
     width: int,
     height: int,
+    interval: str,
 ):
+    if not dst.exists():
+        raise ValueError(
+            f"Target folder {dst} does not exist, please create it before running this script."
+        )
+
     orig = tms.tile(coordx, coordy, zoom)
 
     tiles = []
@@ -159,7 +172,7 @@ def stac_tile(
     }
 
     for tile in tiles:
-        composites = fetch_composites(tile, start, end)
+        composites = fetch_composites(tile, start, end, interval)
 
         filepath = dst / f"videomap-{tile.z}-{tile.x}-{tile.y}.mp4"
         filepathwebm = dst / f"videomap-{tile.z}-{tile.x}-{tile.y}.webm"
