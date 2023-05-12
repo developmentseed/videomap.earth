@@ -74,6 +74,12 @@ And one example is the following:
 ./stac2video.py --dst=/path/to/exiting/folder/videos --coordx=-9.15032 --coordy=38.72595 --start=2023-01-01 --end=2023-05-01 --zoom=12 --width=5 --height=3
 ```
 
+The required python packages can be installed using the requirements file
+
+```
+pip install -r requirements.txt
+```
+
 ### Deploying the data
 The only thing needed to show the videos online is to make the output of the `stac2video.py` utility accessible through the web.
 

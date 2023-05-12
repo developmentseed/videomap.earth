@@ -14,8 +14,6 @@ import stackstac
 import xarray
 from rasterio.enums import Resampling
 
-# pip install opencv-python morecantile numpy pystac_client stackstac xarray rasterio click ffmpeg-python
-
 # 0 NO_DATA
 # 1 SATURATED_OR_DEFECTIVE
 # 2 DARK_AREA_PIXELS
@@ -77,13 +75,17 @@ def fetch_composites(
     # Create composites with cloud mask
     composites_using_cloud_mask = (
         data.where(~cloud_mask)
-        .resample(time=interval, skipna=True, origin=start, closed="right")
+        .resample(
+            time=interval,
+            skipna=True,
+        )
         .median("time")
     )
 
     # Create composites without cloud mask
     composites_using_all_pixels = data.resample(
-        time=interval, skipna=True, origin=start, closed="right"
+        time=interval,
+        skipna=True,
     ).median("time")
 
     # Fill pixels in cloud masked composites with pixels from full composite
