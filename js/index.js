@@ -70,7 +70,7 @@ function getFrameText(frames, currentTime) {
 
 
 function initializeVideoMap(data) {
-    const baseUrl = data.base_url || '';
+    const baseUrl = DATA_URL.split("videos.geojson")[0];
 
     // This is a very weird variable, I apologize. The problem is that we have this weird hack
     // on video seeked event where we need to play the video and pause it immediately, to 
