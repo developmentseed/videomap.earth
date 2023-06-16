@@ -56,6 +56,7 @@ button {
   cursor: pointer;
   font-size: var(--small);
   background: var(--light-shadow);
+  line-height: 0;
 }
 
 #map {
@@ -172,6 +173,10 @@ h1 {
   font-size: var(--medium);
 }
 
+main {
+  transition: opacity 0.5s ease-in-out;
+}
+
 header,
 main,
 footer {
@@ -188,6 +193,7 @@ main {
   width: calc(100vw - 8rem);
   left: 4rem;
   bottom: 10vh;
+  opacity: 0;
 }
 
 footer {
@@ -234,7 +240,7 @@ main nav {
 }
 
 #dates li:hover {
-  opacity: .7;
+  opacity: 1;
 }
 
 #dates li.current {
@@ -252,4 +258,33 @@ main nav {
 #progressFill {
   height: 100%;
   background-color: var(--fg);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--shadow);
+  z-index: 9999;
+  color: var(--fg);
+  padding: 12rem 4rem;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.overlay h1 {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.overlay p {
+  margin-bottom: 2rem;
+}
+
+.overlay button {
+  font-size: var(--medium);
+  width: auto;
 }

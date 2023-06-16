@@ -27,6 +27,25 @@ const SCENES = [
     center: [7.888183593749985, 46.634348599760884],
     zoom: 12,
   },
+  {
+    title: "Atacama desert",
+    url: "https://s3.eu-west-2.amazonaws.com/videomap.earth/videos-atacama/videos.geojson",
+    center: [-68.4228515625, -26.863273833375],
+    zoom: 12,
+  },
+  {
+    title: "Alentejo Portugal",
+    url: "https://videomap.earth/?url=https://s3.eu-west-2.amazonaws.com/videomap.earth/videos-alentejo/videos.geojson",
+    center: [-8.107910156250014, 37.77071269861352],
+    zoom: 13,
+  },
+  {
+    title: "Agricultural fields in India",
+    url: "https://videomap.earth/?url=https://s3.eu-west-2.amazonaws.com/videomap.earth/videos-india-agriculture/videos.geojson",
+    center: [78.211669921875, 17.256236015763818],
+    zoom: 13,
+  },
+
 ];
 
 const hasUrl = getUrlFromUrl() !== null;
@@ -35,6 +54,7 @@ const scene = SCENES.find((s) => s.url === dataUrl);
 
 const ui = {
   main: document.getElementById("main"),
+  about: document.getElementById("about"),
   explorePlaces: document.getElementById("explorePlaces"),
   togglePlay: document.getElementById("togglePlay"),
   speed: document.getElementById("speed"),
@@ -44,6 +64,8 @@ const ui = {
   title: document.getElementById("title"),
   currentFrameDate: document.getElementById("currentFrameDate"),
   currentFrameTitle: document.getElementById("currentFrameTitle"),
+  aboutOverlay: document.getElementById("aboutOverlay"),
+  dismissIntro: document.getElementById("dismissIntro"),
 };
 
 const BASE_STYLE = {
@@ -1214,6 +1236,8 @@ function initializeMap() {
   });
 }
 
+
+
 function initializeUi() {
   if (scene) {
     ui.title.innerHTML = scene.title;
@@ -1231,7 +1255,31 @@ function initializeUi() {
     // TODO keep h2 for hover
     ui.main.style.display = "none";
   });
+
+  ui.about.addEventListener("click", () => {
+    ui.aboutOverlay.style.opacity = 1;
+    ui.aboutOverlay.style.display = "block";
+  });
+  
+  if (!hasUrl) {
+    // Do a quick intro
+    ui.main.style.opacity = 0;
+    ui.aboutOverlay.style.opacity = 0;
+    setInterval(() => {
+      ui.aboutOverlay.style.opacity = 1;
+    }, 2000);
+  } else {
+    ui.main.style.opacity = 1;
+    ui.aboutOverlay.style.display = "none";
+  }
+
+  ui.dismissIntro.addEventListener("click", () => {
+    ui.aboutOverlay.style.display = "none";
+    ui.main.style.opacity = 1;
+  })
 }
+
+
 
 fetch(dataUrl)
   .then((response) => response.json())
@@ -1408,7 +1456,7 @@ function initializeVideoMap(data) {
     videoElements.forEach((videoElement) => {
       // start the videos in a paused state.
       // remove this line if you want the video to autoplay
-      videoElement.pause();
+      // videoElement.pause();
 
       // when we seek to a time-code in the video,
       // for eg. when using the time-slider,
@@ -1506,16 +1554,16 @@ function initializeVideoMap(data) {
       togglePlay();
     });
 
-    // handle user updating time-slider range input
-    document
-      .getElementById("timeSlider")
-      .addEventListener("input", function () {
-        const timeCode = (this.value / 100) * videoElements[0].duration;
-        videoElements.forEach((vid) => {
-          vid.pause();
-          vid.currentTime = timeCode;
-        });
-      });
+    // // handle user updating time-slider range input
+    // document
+    //   .getElementById("timeSlider")
+    //   .addEventListener("input", function () {
+    //     const timeCode = (this.value / 100) * videoElements[0].duration;
+    //     videoElements.forEach((vid) => {
+    //       vid.pause();
+    //       vid.currentTime = timeCode;
+    //     });
+    //   });
 
     ui.speed.addEventListener("click", function () {
       currentSpeed = currentSpeed === SPEEDS.length - 1 ? 0 : currentSpeed + 1;

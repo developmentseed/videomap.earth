@@ -1,137 +1,150 @@
 {
-	"type": "FeatureCollection",
-    "base_url": "videos/",
-    "center":  [-9.140621920671814, 38.68550735632379],
-    "zoom": 11,
-    "frames": {
-        "0.0": {
-            "title": "January, 2021",
-            "description": "Here we can put random title and description for frames."
-        },
-        "1.0": {
-            "title": "February, 2021",
-            "description": "Lorem ipsum description"
-        },
-        "2.0": {
-            "title": "March, 2021",
-            "description": "Lorem ipsum description"
-        },
-        "3.0": {
-            "title": "April, 2021",
-            "description": "Lorem ipsum description"
-        },
-        "4.0": {
-            "title": "May, 2021",
-            "description": "Lorem ipsum description"
-        },
-        "5.0": {
-            "title": "June, 2021",
-            "description": "Lorem ipsum description"
-        },
-        "6.0": {
-            "title": "July, 2021",
-            "description": "Lorem ipsum description"
-        },
-        "7.0": {
-            "title": "August, 2021",
-            "description": "Lorem ipsum description"
-        },
-        "8.0": {
-            "title": "September, 2021",
-            "description": "You made it to the end, yay."
-        }
+  "type": "FeatureCollection",
+  "base_url": "videos/",
+  "center": [-9.140621920671814, 38.68550735632379],
+  "zoom": 11,
+  "frames": {
+    "0.0": {
+      "title": "2021-01-01",
+      "description": "Here we can put random title and description for frames."
     },
-	"features": [{
-			"type": "Feature",
-			"bbox": [-9.228512545671846, 38.68550735632379, -9.140621920671814, 38.75408087440849],
-			"id": "Tile(x=1943, y=1569, z=12)",
-			"geometry": {
-				"type": "Polygon",
-				"coordinates": [
-					[
-						[-9.228512545671846, 38.68550735632379],
-						[-9.228512545671846, 38.75408087440849],
-						[-9.140621920671814, 38.75408087440849],
-						[-9.140621920671814, 38.68550735632379],
-						[-9.228512545671846, 38.68550735632379]
-					]
-				]
-			},
-			"properties": {
-                "url": "videomap-12-1943-1569.webm",
-				"title": "XYZ tile Tile(x=1943, y=1569, z=12)",
-				"grid_name": "WebMercatorQuad",
-				"grid_crs": "EPSG:3857"
-			}
-		},
-		{
-			"type": "Feature",
-			"bbox": [-9.228512545671846, 38.61686805793746, -9.140621920671814, 38.68550735632379],
-			"id": "Tile(x=1943, y=1570, z=12)",
-			"geometry": {
-				"type": "Polygon",
-				"coordinates": [
-					[
-						[-9.228512545671846, 38.61686805793746],
-						[-9.228512545671846, 38.68550735632379],
-						[-9.140621920671814, 38.68550735632379],
-						[-9.140621920671814, 38.61686805793746],
-						[-9.228512545671846, 38.61686805793746]
-					]
-				]
-			},
-			"properties": {
-                "url": "videomap-12-1943-1570.webm",
-				"title": "XYZ tile Tile(x=1943, y=1570, z=12)",
-				"grid_name": "WebMercatorQuad",
-				"grid_crs": "EPSG:3857"
-			}
-		},
-		{
-			"type": "Feature",
-			"bbox": [-9.140621920671814, 38.68550735632379, -9.052731295671817, 38.75408087440849],
-			"id": "Tile(x=1944, y=1569, z=12)",
-			"geometry": {
-				"type": "Polygon",
-				"coordinates": [
-					[
-						[-9.140621920671814, 38.68550735632379],
-						[-9.140621920671814, 38.75408087440849],
-						[-9.052731295671817, 38.75408087440849],
-						[-9.052731295671817, 38.68550735632379],
-						[-9.140621920671814, 38.68550735632379]
-					]
-				]
-			},
-			"properties": {
-                "url": "videomap-12-1944-1569.webm", 
-				"title": "XYZ tile Tile(x=1944, y=1569, z=12)",
-				"grid_name": "WebMercatorQuad",
-				"grid_crs": "EPSG:3857"
-			}
-		},
-		{
-			"type": "Feature",
-			"bbox": [-9.140621920671814, 38.61686805793746, -9.052731295671817, 38.68550735632379],
-			"id": "Tile(x=1944, y=1570, z=12)",
-			"geometry": {
-				"type": "Polygon",
-				"coordinates": [
-					[
-						[-9.140621920671814, 38.61686805793746],
-						[-9.140621920671814, 38.68550735632379],
-						[-9.052731295671817, 38.68550735632379],
-						[-9.052731295671817, 38.61686805793746],
-						[-9.140621920671814, 38.61686805793746]
-					]
-				]
-			},
-			"properties": {
-                "url": "videomap-12-1944-1570.webm",
-				"title": "XYZ tile Tile(x=1944, y=1570, z=12)",
-				"grid_name": "WebMercatorQuad",
-				"grid_crs": "EPSG:3857"
-			}
-		}
-	]
+    "1.0": {
+      "title": "2021-02-01",
+      "description": "Lorem ipsum description"
+    },
+    "2.0": {
+      "title": "2021-03-01",
+      "description": "Lorem ipsum description"
+    },
+    "3.0": {
+      "title": "2021-04-01",
+      "description": "Lorem ipsum description"
+    },
+    "4.0": {
+      "title": "2021-05-01",
+      "description": "Lorem ipsum description"
+    },
+    "5.0": {
+      "title": "2021-06-01",
+      "description": "Lorem ipsum description"
+    },
+    "6.0": {
+      "title": "2021-07-01",
+      "description": "Lorem ipsum description"
+    },
+    "7.0": {
+      "title": "2021-08-01",
+      "description": "Lorem ipsum description"
+    },
+    "8.0": {
+      "title": "2021-09-01",
+      "description": "You made it to the end, yay."
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "bbox": [
+        -9.228512545671846, 38.68550735632379, -9.140621920671814,
+        38.75408087440849
+      ],
+      "id": "Tile(x=1943, y=1569, z=12)",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-9.228512545671846, 38.68550735632379],
+            [-9.228512545671846, 38.75408087440849],
+            [-9.140621920671814, 38.75408087440849],
+            [-9.140621920671814, 38.68550735632379],
+            [-9.228512545671846, 38.68550735632379]
+          ]
+        ]
+      },
+      "properties": {
+        "url": "videomap-12-1943-1569.webm",
+        "title": "XYZ tile Tile(x=1943, y=1569, z=12)",
+        "grid_name": "WebMercatorQuad",
+        "grid_crs": "EPSG:3857"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -9.228512545671846, 38.61686805793746, -9.140621920671814,
+        38.68550735632379
+      ],
+      "id": "Tile(x=1943, y=1570, z=12)",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-9.228512545671846, 38.61686805793746],
+            [-9.228512545671846, 38.68550735632379],
+            [-9.140621920671814, 38.68550735632379],
+            [-9.140621920671814, 38.61686805793746],
+            [-9.228512545671846, 38.61686805793746]
+          ]
+        ]
+      },
+      "properties": {
+        "url": "videomap-12-1943-1570.webm",
+        "title": "XYZ tile Tile(x=1943, y=1570, z=12)",
+        "grid_name": "WebMercatorQuad",
+        "grid_crs": "EPSG:3857"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -9.140621920671814, 38.68550735632379, -9.052731295671817,
+        38.75408087440849
+      ],
+      "id": "Tile(x=1944, y=1569, z=12)",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-9.140621920671814, 38.68550735632379],
+            [-9.140621920671814, 38.75408087440849],
+            [-9.052731295671817, 38.75408087440849],
+            [-9.052731295671817, 38.68550735632379],
+            [-9.140621920671814, 38.68550735632379]
+          ]
+        ]
+      },
+      "properties": {
+        "url": "videomap-12-1944-1569.webm",
+        "title": "XYZ tile Tile(x=1944, y=1569, z=12)",
+        "grid_name": "WebMercatorQuad",
+        "grid_crs": "EPSG:3857"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -9.140621920671814, 38.61686805793746, -9.052731295671817,
+        38.68550735632379
+      ],
+      "id": "Tile(x=1944, y=1570, z=12)",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-9.140621920671814, 38.61686805793746],
+            [-9.140621920671814, 38.68550735632379],
+            [-9.052731295671817, 38.68550735632379],
+            [-9.052731295671817, 38.61686805793746],
+            [-9.140621920671814, 38.61686805793746]
+          ]
+        ]
+      },
+      "properties": {
+        "url": "videomap-12-1944-1570.webm",
+        "title": "XYZ tile Tile(x=1944, y=1570, z=12)",
+        "grid_name": "WebMercatorQuad",
+        "grid_crs": "EPSG:3857"
+      }
+    }
+  ]
 }
