@@ -1,0 +1,22 @@
+{
+  "name": "videomap.earth",
+  "version": "1.0.0",
+  "description": "Experiments with overlaying time-series satellite imagery on a map",
+  "main": "js/index.js",
+  "scripts": {
+    "start": "live-server --no-browser --port=9876"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/developmentseed/videomap.earth.git"
+  },
+  "author": "Development Seed",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/developmentseed/videomap.earth/issues"
+  },
+  "homepage": "https://github.com/developmentseed/videomap.earth#readme",
+  "dependencies": {
+    "live-server": "1.2.1"
+  }
+}

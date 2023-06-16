@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>We like maps, we like video, we like video on maps</title>
@@ -7,45 +8,74 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
     <link rel="stylesheet" href="css/index.css" />
-<style>
+    <style>
 
-</style>
+    </style>
 </head>
-<body>
-    <div id="overlay">
-        <p>
-            Click on the map to start. If the video goes out of sync, just click on the map and then click again.
-            Use the slider on the right to adjust opacity.
-            (
-                <a href="https://github.com/batpad/videomap" target="_blank">?</a>
-            )
-        </p>
-        <p id="timeSliderContainer">
-            <span id="playButton">
-                ▶
-            </span>
-            <input type="range" id="timeSlider" min="0" max="100" value="0" />
-            <select id="speedSelect">
-                <option value="1">Select Speed (1x)</option>
-                <option value="0.1">0.1x (V Slow)</option>
-                <option value="0.5">0.5x</option>
-                <option value="2">2x</option>
-                <option value="4">4x</option>
-            </select>
-        </p>
-    </div>
-    <div id="frameTextOverlay" class="hide">
-        <h3 id="frameTextTitle">Test</h3>
-        <p id="frameTextDescription">
-            Lorem ipsum
-        </p>
-    </div>
-    <div id="opacityContainer">
 
-        <input type="range" id="opacity" min="0" max="1" step="0.01" value="1" orient="vertical" />
+<body>
+   
+
+    <div id="ui">
+        <header>
+            <nav>
+                <menu>
+                    <li>
+                        <h1>videomaps.earth</h1>
+                    </li>
+                    <li id="explorePlaces">explore places</li>
+                    <li id="about">about this</li>
+                    <li>make your own</li>
+                </menu>
+            </nav>
+        </header>
+        <main id="main">
+            <h2 id="title"></h2>
+            <h3 id="currentFrameDate">On September 13th, 2020</h3>
+            <p id="currentFrameTitle"></p>
+            <nav>
+                <menu class="controls">
+                    <button id="togglePlay">⏸</button>
+                    <button id="speed"><i>⌁</i> ×<span>1</span></button>
+                    <button id="alpha">☀︎ <span>100</span>%</button>
+                </menu>
+
+                <div class="progress">
+                    <menu id="dates">
+
+                    </menu>
+                    <div class="progress-bar">
+                        <div id="progressFill" style="width: 40%"></div>
+                    </div>
+                </div>
+            </nav>
+        </main>
+        <footer>
+            an experiment by <a href="https://developmentseed.org/">Development Seed</a>
+        </footer>
+    </div>
+    <div class="overlay" id="aboutOverlay">
+        <h1>videomaps.earth</h1>
+        <p>This project lets you overlay videos of satellite imagery onto maps. You choose a
+            place, set a timeframe, and the tool gets the data from a STAC endpoint. The result is a zoomable video on
+            the map
+            with very fine detail, down to changes that happen week by week. </p>
+
+        <p>You'll sometimes see
+            cloudy frames in the video. Don't worry, that's just part of having such detailed time steps.</p>
+
+        <p>You can visit a few preset interesting places with this tool. Or, if you have access to a Python environment,
+            go ahead and try this on any place in the world with any time steps.</p>
+
+        <button id="dismissIntro">Dismiss</button>
     </div>
     <div id="map"></div>
+    <script src="
+https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js
+"></script>
+
     <script src="js/index.js"></script>
 
 </body>
+
 </html>
