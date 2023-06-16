@@ -1,96 +1,240 @@
 html {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
-  
-*, *:before, *:after {
-    box-sizing: inherit;
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
-  
 
 body {
-    margin: 0;
-    padding: 0;
-    overflow-y: hidden;
-    overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  font-family: "Helvetica Neue", "Helvetica", sans-serif;
+}
+
+menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a,
+a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover,
+header li:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+}
+
+header li:hover {
+  cursor: pointer;
+}
+
+button {
+  background: none;
+  color: var(--fg);
+  padding: 0.4rem;
+  width: 4.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--fg);
+  font-family: "Helvetica Neue", "Helvetica", sans-serif;
+  cursor: pointer;
+  font-size: var(--small);
 }
 
 #map {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 #overlay {
-    position: absolute;
-    top: 0px;
-    left: 10%;
-    width: 80%;
-    z-index: 9999;
-    background-color: rgba(42,42,42,0.6);
-    color: white;
-    text-align: center;
-    padding: 4px;
+  display: none;
+  position: absolute;
+  top: 0px;
+  left: 10%;
+  width: 80%;
+  z-index: 9999;
+  background-color: rgba(42, 42, 42, 0.6);
+  color: white;
+  text-align: center;
+  padding: 4px;
 }
 
 #overlay a {
-    color: hotpink;
-    font-weight: bold;
-    text-decoration: none;
+  color: hotpink;
+  font-weight: bold;
+  text-decoration: none;
 }
 
 #overlay p {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 #playButton {
-    border: 2px solid #fff;
-    border-radius: 12px;
-    padding: 6px;
-    cursor: pointer;
+  border: 2px solid #fff;
+  border-radius: 12px;
+  padding: 6px;
+  cursor: pointer;
 }
 
 #timeSliderContainer {
-    width: 80%;
+  width: 80%;
 }
 
 #timeSlider {
-    width: 70%;
+  width: 70%;
 }
 
 #frameTextOverlay {
-    position: absolute;
-    left: 0px;
-    top: 40%;
-    height: 60%;
-    padding: 4px;
-    width: 20%;
-    min-width: 200px;
-    background: rgba(42,42,42,0.4);
-    color: white;
-    z-index: 9999;
+  display: none;
+  position: absolute;
+  left: 0px;
+  top: 40%;
+  height: 60%;
+  padding: 4px;
+  width: 20%;
+  min-width: 200px;
+  background: rgba(42, 42, 42, 0.4);
+  color: white;
+  z-index: 9999;
 }
 
 #opacityContainer {
-    position: absolute;
-    right: 0px;
-    width: 24px;
-    height: 100%;
-    padding-top: 7.5%;
-    background-color: rgba(42,42,42,0.6);
-    color: white;
-    text-align: center;
-    z-index: 9999;
+  position: absolute;
+  right: 0px;
+  width: 24px;
+  height: 100%;
+  padding-top: 7.5%;
+  background-color: rgba(42, 42, 42, 0.6);
+  color: white;
+  text-align: center;
+  z-index: 9999;
 }
 
 #opacity {
-    display: block;
-    width: 16px;
-    height: 70%;
-    appearance: slider-vertical;
+  display: block;
+  width: 16px;
+  height: 70%;
+  appearance: slider-vertical;
 }
 
 .hide {
-    display: none;
+  display: none;
+}
+
+:root {
+  --fg: white;
+  --shadow: rgba(0, 0, 0, 0.75);
+  --big: 4rem;
+  --medium: 1.6rem;
+  --small: 0.7rem;
+}
+
+#ui {
+  position: absolute;
+  pointer-events: none;
+  color: var(--fg);
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-shadow: 0 0 10px var(--shadow);
+}
+
+nav,
+footer {
+  pointer-events: all;
+}
+
+h1 {
+  font-size: var(--medium);
+}
+
+header,
+main,
+footer {
+  position: absolute;
+}
+
+header {
+  top: 1rem;
+  left: 1rem;
+  font-size: var(--medium);
+}
+
+main {
+  width: calc(100vw - 8rem);
+  left: 4rem;
+  bottom: 10vh;
+}
+
+footer {
+  top: 1rem;
+  right: 1rem;
+}
+
+h2 {
+  font-size: var(--big);
+}
+
+h3,
+p {
+  font-size: var(--medium);
+}
+
+main nav {
+  margin-top: 2rem;
+}
+
+#togglePlay {
+  border-width: 3px;
+}
+
+#speed i {
+  transform: rotate(90deg) scale(1.8);
+  display: inline-block;
+
+}
+
+.progress {
+  margin-top: 3rem;
+}
+
+.dates li {
+  position: absolute;
+  bottom: 10px;
+  font-size: var(--small);
+  border-left: 1px solid var(--fg);
+  padding: 0 0 1rem 0.5rem;
+}
+
+.progress-bar {
+  margin-top: 2rem;
+  width: 100%;
+  height: 10px;
+  border: 1px solid var(--fg);
+}
+
+.progress-fill {
+  height: 10px;
+  background-color: var(--fg);
 }
