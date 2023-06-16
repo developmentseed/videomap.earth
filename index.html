@@ -54,43 +54,42 @@
                     <li>
                         <h1>videomaps.earth</h1>
                     </li>
-                    <li>explore places</li>
+                    <li id="explorePlaces">explore places</li>
                     <li>about this</li>
                     <li>make your own</li>
                 </menu>
             </nav>
         </header>
-        <main>
-            <h2>Lisbon, Portugal</h2>
-            <h3>On September 13th, 2020</h3>
-            <p>Lorem ipsumLorem ipsumLorem ipsumLorem ipsum </p>
+        <main id="main">
+            <h2 id="title"></h2>
+            <h3 id="currentFrameDate">On September 13th, 2020</h3>
+            <p id="currentFrameTitle"></p>
             <nav>
                 <menu class="controls">
                     <button id="togglePlay">▶</button>
-                    <button id="speed"><i>⌁</i> ×<span>2</span></button>
-                    <button id="alpha">☀︎ 100%</button>
+                    <button id="speed"><i>⌁</i> ×<span>1</span></button>
+                    <button id="alpha">☀︎ <span>100</span>%</button>
                 </menu>
 
                 <div class="progress">
-                    <menu class="dates">
-                        <li>September 13th, 2020</li>
-                        <li style="left: 50%">September 14th, 2020</li>
-                        <li>September 15th, 2020</li>
-                        <li>September 16th, 2020</li>
-                        <li>September 17th, 2020</li>
-                        <li>September 18th, 2020</li>
+                    <menu id="dates">
+
                     </menu>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 40%"></div>
+                        <div id="progressFill" style="width: 40%"></div>
                     </div>
                 </div>
             </nav>
         </main>
         <footer>
-            <a href="https://developmentseed.org/">an experiment by Development Seed</a>
+            an experiment by <a href="https://developmentseed.org/">Development Seed</a>
         </footer>
     </div>
     <div id="map"></div>
+    <script src="
+https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js
+"></script>
+
     <script src="js/index.js"></script>
 
 </body>

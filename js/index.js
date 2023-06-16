@@ -1,3 +1,5 @@
+var DateTime = luxon.DateTime;
+
 // TO MAKE THE MAP APPEAR YOU MUST
 // ADD YOUR ACCESS TOKEN FROM
 // https://account.mapbox.com
@@ -7,12 +9,17 @@ mapboxgl.accessToken =
 const PLAY = "▶";
 const PAUSE = "⏸";
 
+const SPEEDS = [0.1, 0.5, 1, 2, 4];
+let currentSpeed = 2;
+const ALPHAS = [0, 0.25, 0.5, 0.75, 1];
+let currentAlpha = 4;
+
 const SCENES = [
   {
-    title: "Lisbon",
+    title: "Lisbon, Portugal",
     url: "videos/videos.geojson",
     center: [-9.140621920671814, 38.68550735632379],
-    zoom: 11
+    zoom: 11,
   },
   {
     title: "Mountains around Interlaken, Switzerland",
@@ -24,12 +31,20 @@ const SCENES = [
 
 const hasUrl = getUrlFromUrl() !== null;
 const dataUrl = getUrlFromUrl() || SCENES[0].url;
-const scene = SCENES.find((s) => s.url === dataUrl) || SCENES[0];
+const scene = SCENES.find((s) => s.url === dataUrl);
 
-console.log(scene)
-
-
-
+const ui = {
+  main: document.getElementById("main"),
+  explorePlaces: document.getElementById("explorePlaces"),
+  togglePlay: document.getElementById("togglePlay"),
+  speed: document.getElementById("speed"),
+  alpha: document.getElementById("alpha"),
+  dates: document.getElementById("dates"),
+  progressFill: document.getElementById("progressFill"),
+  title: document.getElementById("title"),
+  currentFrameDate: document.getElementById("currentFrameDate"),
+  currentFrameTitle: document.getElementById("currentFrameTitle"),
+};
 
 const BASE_STYLE = {
   version: 8,
@@ -1166,9 +1181,9 @@ function initializeMap() {
   // create map
   map = new mapboxgl.Map({
     container: "map",
-    minZoom: 1,
-    zoom: scene.zoom,
-    center: scene.center,
+    minZoom: 9,
+    zoom: scene ? scene.zoom : SCENES[0].zoom,
+    center: scene ? scene.center : SCENE[0].center,
     style: BASE_STYLE,
     projection: "globe",
   });
@@ -1179,6 +1194,7 @@ function initializeMap() {
   map.on("click", "markers", (e) => {
     const { url } = e.features[0].properties;
     const zoom = SCENES.find((scene) => scene.url === url).zoom || 10;
+    map.setMaxZoom(22);
     map.flyTo({
       center: e.features[0].geometry.coordinates,
       zoom,
@@ -1191,7 +1207,6 @@ function initializeMap() {
   });
   map.on("mouseenter", "markers", (e) => {
     const { title } = e.features[0].properties;
-    console.log(title);
     map.getCanvas().style.cursor = "pointer";
   });
   map.on("mouseleave", "markers", () => {
@@ -1199,10 +1214,28 @@ function initializeMap() {
   });
 }
 
+function initializeUi() {
+  if (scene) {
+    ui.title.innerHTML = scene.title;
+  }
+  ui.explorePlaces.addEventListener("click", () => {
+    map.setMinZoom(0);
+    map.flyTo({
+      center: [0, 0],
+      zoom: 1.5,
+      speed: 3,
+    });
+    map.once("moveend", () => {
+      map.setMaxZoom(2.5);
+    });
+    // TODO keep h2 for hover
+    ui.main.style.display = "none";
+  });
+}
+
 fetch(dataUrl)
   .then((response) => response.json())
   .then((geojson) => {
-    console.log("geojson", geojson);
     initializeVideoMap(geojson);
   })
   .catch((err) => {
@@ -1214,6 +1247,7 @@ fetch(dataUrl)
   });
 
 initializeMap();
+initializeUi();
 
 function getUrlFromUrl() {
   const searchParams = new URLSearchParams(window.location.search);
@@ -1254,6 +1288,18 @@ function getFrameText(frames, currentTime) {
   return frameText;
 }
 
+function getFrameData(frames, currentTime) {
+  let frameData = false;
+  frames.forEach((frame) => {
+    // Again, very brittle
+    const frameTimecode = parseFloat(frame.id);
+    if (currentTime >= frameTimecode) {
+      frameData = frame;
+    }
+  });
+  return frameData;
+}
+
 function initializeVideoMap(data) {
   const baseUrl = dataUrl.split("videos.geojson")[0];
 
@@ -1264,6 +1310,58 @@ function initializeVideoMap(data) {
   // So we use this weird-as-hell DONT_FLICKER global-ish variable to keep track of state,
   // of whether we DONT WANT TO FLICKER. This is most likely awful.
   let DONT_FLICKER = false;
+
+  // Populate UI
+  const title = data.title || scene.title;
+  if (title) {
+    document.querySelector("h2").innerHTML = title;
+  }
+
+  // Assuming first frame in the dict is also the first frame in time
+  let firstTimestamp;
+  let lastTimestamp;
+  let framesWithTimecodes = Object.entries(data.frames).map(
+    ([id, frameData], i) => {
+      // This is super brittle - will need the python script to produce a timecode
+      const dt = DateTime.fromISO(frameData.title);
+      if (i === 0) {
+        firstTimestamp = +dt;
+      }
+      if (i === Object.entries(data.frames).length - 1) {
+        lastTimestamp = +dt;
+      }
+      return {
+        id,
+        ...frameData,
+        timestamp: +dt,
+        humanTimestampShort: dt.toLocaleString(DateTime.DATE_MED),
+        humanTimestamp: dt.toLocaleString(DateTime.DATE_FULL),
+      };
+    }
+  );
+
+  framesWithTimecodes.map((frame) => {
+    const frameTimecode = frame.timestamp;
+    const percent =
+      ((frameTimecode - firstTimestamp) / (lastTimestamp - firstTimestamp)) *
+      100;
+    frame.percent = percent;
+    return frame;
+  });
+
+  framesWithTimecodes.forEach((frame) => {
+    const frameEl = document.createElement("li");
+    frameEl.style.left = `${frame.percent}%`;
+    // frameEl.classList.add("frame");
+    frameEl.innerHTML = frame.humanTimestampShort;
+    // frameEl.addEventListener("click", () => {
+    //   const videoElements = document.querySelectorAll("video");
+    //   videoElements.forEach((videoElement) => {
+    //     videoElement.currentTime = frame.timestamp / 1000;
+    //   });
+    // });
+    ui.dates.appendChild(frameEl);
+  });
 
   // construct video sources to add to style
   const videoSources = data.features.reduce((acc, val, index) => {
@@ -1339,7 +1437,7 @@ function initializeVideoMap(data) {
     // Unless DONT_FLICKER is true, then don't do anything.
     videoElements[0].addEventListener("play", function () {
       if (!DONT_FLICKER) {
-        document.getElementById("playButton").innerHTML = PAUSE;
+        ui.togglePlay.innerHTML = PAUSE;
         hideFrameText();
       } else {
         DONT_FLICKER = false;
@@ -1348,15 +1446,17 @@ function initializeVideoMap(data) {
 
     // on video pause, set button to play icon, show text for current time-code / frame.
     videoElements[0].addEventListener("pause", function () {
-      document.getElementById("playButton").innerHTML = PLAY;
-      showFrameText();
+      ui.togglePlay.innerHTML = PLAY;
+      showFrameData();
     });
 
     // whenever the video timecode updates, we need to update the time-slider range to the correct poing.
     videoElements[0].addEventListener("timeupdate", function () {
       const currentTime = this.currentTime;
       const percent = (currentTime / this.duration) * 100;
-      document.getElementById("timeSlider").value = parseInt(percent);
+      // TODO use computed values from framesWithTimecodes instead?
+      ui.progressFill.style.width = `${percent}%`;
+      showFrameData();
     });
 
     map.on("click", () => {
@@ -1380,15 +1480,17 @@ function initializeVideoMap(data) {
     }
 
     // function to show text at the current frame
-    function showFrameText() {
-      if (!data.frames) return;
+    function showFrameData() {
+      if (!framesWithTimecodes) return;
       const currentTime = videoElements[0].currentTime;
-      const frameText = getFrameText(data.frames, currentTime);
-      if (frameText) {
-        document.getElementById("frameTextTitle").innerText = frameText.title;
-        document.getElementById("frameTextDescription").innerText =
-          frameText.description;
-        document.getElementById("frameTextOverlay").classList.remove("hide");
+      // const frameText = getFrameText(data.frames, currentTime);
+      const frameData = getFrameData(framesWithTimecodes, currentTime);
+
+      if (frameData) {
+        ui.currentFrameDate.innerText = frameData.humanTimestamp;
+        ui.currentFrameTitle.innerText = frameData.description
+          ? frameData.description
+          : "";
       }
     }
 
@@ -1399,12 +1501,10 @@ function initializeVideoMap(data) {
     }
 
     // toggle play on clicking play button
-    document
-      .getElementById("playButton")
-      .addEventListener("click", function () {
-        DONT_FLICKER = false;
-        togglePlay();
-      });
+    ui.togglePlay.addEventListener("click", function () {
+      DONT_FLICKER = false;
+      togglePlay();
+    });
 
     // handle user updating time-slider range input
     document
@@ -1417,21 +1517,23 @@ function initializeVideoMap(data) {
         });
       });
 
-    document
-      .getElementById("speedSelect")
-      .addEventListener("change", function () {
-        const playbackRate = this.value;
-        videoElements.forEach((vid) => {
-          vid.playbackRate = parseFloat(playbackRate);
-        });
+    ui.speed.addEventListener("click", function () {
+      currentSpeed = currentSpeed === SPEEDS.length - 1 ? 0 : currentSpeed + 1;
+      const playbackRate = SPEEDS[currentSpeed];
+      videoElements.forEach((vid) => {
+        vid.playbackRate = playbackRate;
       });
-  });
+      ui.speed.querySelector("span").innerText = playbackRate;
+    });
 
-  // handle opacity slider
-  document.getElementById("opacity").addEventListener("input", function () {
-    const newOpacity = parseFloat(this.value);
-    videoLayers.forEach((layer) => {
-      map.setPaintProperty(layer.id, "raster-opacity", newOpacity);
+    ui.alpha.addEventListener("click", () => {
+      currentAlpha = currentAlpha === ALPHAS.length - 1 ? 0 : currentAlpha + 1;
+      const opacity = ALPHAS[currentAlpha];
+      console.log(opacity);
+      videoLayers.forEach((layer) => {
+        map.setPaintProperty(layer.id, "raster-opacity", opacity);
+      });
+      ui.alpha.querySelector("span").innerText = opacity * 100;
     });
   });
 }
