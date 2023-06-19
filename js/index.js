@@ -1583,5 +1583,31 @@ function initializeVideoMap(data) {
       });
       ui.alpha.querySelector("span").innerText = opacity * 100;
     });
+
+    function simulateClick(elem) {
+      const event = new MouseEvent("click", {
+        view: window,
+        bubbles: false,
+        cancelable: false
+      });
+      elem.dispatchEvent(event);
+    }
+
+    document.addEventListener("keyup", event => {
+      switch (event.key) {
+        case 's':
+          simulateClick(ui.speed);
+          break;
+        case 'o':
+          simulateClick(ui.alpha);
+          break;
+        case ' ':
+          simulateClick(ui.togglePlay);
+          break;
+        default:
+          console.log(event.key);
+          break;
+      }
+    });
   });
 }
