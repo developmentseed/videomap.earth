@@ -64,6 +64,13 @@ Options:
                     14D. This will be passed to the `resample` function on the
                     time dimension from xarray. See https://docs.xarray.dev/en
                     /stable/generated/xarray.DataArray.resample.html
+  --up INTEGER      Use higher zoom level to determine resolution of output
+                    videos. The default resolution is 256x256 pixels. Up works
+                    as multiplier. For instance, for up=1, the resolution of
+                    the video will be 512x512 pixels, and up=2 it will be
+                    1024x1024 px
+  --images          Output each frame as png image as well
+  --keep-mp4        Keep intermediary mp4 files
   --help            Show this message and exit.
 ```
 
