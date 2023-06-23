@@ -4,3 +4,4 @@ stackstac
 pystac_client
 click
 ffmpeg-python
+pillow
