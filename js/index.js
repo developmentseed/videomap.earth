@@ -4,7 +4,7 @@ var DateTime = luxon.DateTime;
 // ADD YOUR ACCESS TOKEN FROM
 // https://account.mapbox.com
 mapboxgl.accessToken =
-  "pk.eyJ1IjoiZ2VvaGFja2VyIiwiYSI6ImFIN0hENW8ifQ.GGpH9gLyEg0PZf3NPQ7Vrg";
+  "pk.eyJ1IjoiZ2VvaGFja2VyIiwiYSI6ImNsajN4ZnA0MDFpYWczZ3A5MWxnZHBkdG8ifQ.Sot_30eI1tfJ6sfNNxPHtQ";
 
 const PLAY = "▶";
 const PAUSE = "⏸";
