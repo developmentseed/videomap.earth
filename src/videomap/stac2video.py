@@ -87,17 +87,45 @@ def fetch_composites(
         .median("time")
     )
 
+    # Frame cloud percentage
+    sum_of_not_cloudy_scenes = (
+        numpy.logical_not(scl.isin(CLOUDY_OR_NODATA))
+        .resample(time=interval, skipna=True)
+        .sum()
+    )
+    at_least_one_cloud_free_pixel = sum_of_not_cloudy_scenes > 0
+    per_frame_cloud_percentage = numpy.round(
+        1 - at_least_one_cloud_free_pixel.sum(dim=("x", "y")) / scl[0].size, decimals=2
+    ).data
+
     # Create composites without cloud mask
-    composites_using_all_pixels = data.resample(
+    resampled = data.resample(
         time=interval,
         skipna=True,
-    ).median("time")
+    )
+    composites_using_all_pixels = resampled.median("time")
+
+    # Collect metadata for all scenes by frame
+    meta = []
+    for index, slice_key in enumerate(resampled.groups.values()):
+        slice = data[slice_key]
+        meta.append(
+            {
+                "title": str(slice.time.data[-1])[:10],
+                "description": f"Sentinel-2 composite of {len(slice.time)} images between {str(slice.time.data[0])[:10]} and {str(slice.time.data[-1])[:10]}.",
+                "dates": [str(x) for x in slice.time.data],
+                "cloud_percentage": per_frame_cloud_percentage[index],
+            }
+        )
 
     # Fill pixels in cloud masked composites with pixels from full composite
-    return xarray.where(
-        numpy.isnan(composites_using_cloud_mask),
-        composites_using_all_pixels,
-        composites_using_cloud_mask,
+    return (
+        xarray.where(
+            numpy.isnan(composites_using_cloud_mask),
+            composites_using_all_pixels,
+            composites_using_cloud_mask,
+        ),
+        meta,
     )
 
 
@@ -148,7 +176,7 @@ def tile_center(tile: morecantile.commons.Tile) -> Tuple[float]:
     "--up",
     default=0,
     type=int,
-    help="Use higher zoom level to determine resolution of output videos. The default resolution is 256x256 pixels. Up works as multiplier. For instance, for up=1, the resolution of the video will be 512x512 pixels, and up=2 it will be 1024x1024 px",
+    help="Use higher zoom level to determine resolution of output videos. The default resolution is 256x256 pixels. Up works as multiplier. For instance, for up=1, the resolution of the video will be 512x512 pixels, and up=2 it will be 1024x1024 pixels",
 )
 @click.option("--images", is_flag=True, help="Output each frame as png image as well")
 @click.option(
@@ -195,7 +223,8 @@ def stac_tile(
     }
 
     for tile in tiles:
-        composites = fetch_composites(tile, start, end, interval, up)
+        print("Tile", tile)
+        composites, meta = fetch_composites(tile, start, end, interval, up)
 
         filepath = dst / f"videomap-{tile.z}-{tile.x}-{tile.y}.mp4"
         filepathwebm = dst / f"videomap-{tile.z}-{tile.x}-{tile.y}.webm"
@@ -238,16 +267,33 @@ def stac_tile(
         # Add tms tile feature to videos geojson object
         feat = tms.feature(tile)
         feat["properties"]["url"] = f"videomap-{tile.z}-{tile.x}-{tile.y}.webm"
+        feat["properties"]["metadata"] = meta
 
         videos["features"].append(feat)
 
-    # Add date information per frame
-    for index, date in enumerate(composites.time.data):
-        videos["frames"][str(index)] = {
-            "title": str(date)[:10],
-            "description": f"Sentinel-2 composite of images from the two weeks prior to {str(date)[:10]}.",
-        }
+    frame_cloud_percentage_averages = []
+    frame_dates = []
+    for frame in range(len(composites.time)):
+        # Compute unique list of dates from all tiles for this frame
+        dates = set()
+        for feat in videos["features"]:
+            dates |= set(feat["properties"]["metadata"][frame]["dates"])
+        frame_dates.append(list(dates))
+        # Compute average cloud cover from all tiles for this frame
+        avg = numpy.average(
+            [
+                feat["properties"]["metadata"][frame]["cloud_percentage"]
+                for feat in videos["features"]
+            ]
+        )
+        frame_cloud_percentage_averages.append(avg)
 
+    videos["frames"][str(frame)] = {
+        "title": frame_dates[-1][:10],
+        "description": f"Sentinel-2 composite of {len(frame_dates)} images between {frame_dates[0][:10]} and {frame_dates[-1][:10]}.",
+        "frame_input_dates": frame_dates,
+        "frame_average_cloud_cover": frame_cloud_percentage_averages,
+    }
     with open(dst / f"videos.geojson", "w") as f:
         json.dump(videos, f)
 
