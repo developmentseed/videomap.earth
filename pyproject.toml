@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "videomap"
+version = "0.1.0"
+authors = [
+  { name="Daniel Wiesmann", email="danielwiesmann@developmentseed.org" },
+]
+description = "Videomaps command line utility"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "opencv-python",
+    "ffmpeg-python",
+    "stackstac",
+    "pystac_client",
+    "morecantile",
+    "click",
+    "pillow",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/developmentseed/videomap.earth"
+"Bug Tracker" = "https://github.com/developmentseed/videomap.earth/issues"
+
+[project.scripts]
+stac2video = "videomap.stac2video:stac_tile"

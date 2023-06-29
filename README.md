@@ -36,17 +36,41 @@ To run, use your favourite method to serve a local web-server in this folder. Wi
 Then, go to http://localhost:9000 in your browser.
 
 ### Video creation
+The `stac2video` command-line utility can be used to prepare videos from Sentinel-2
+imagery. The utility will create videos from imagery over a time range at fixed
+time intervals, as specified by the user. Every frame of the videos is a
+composite image. The latest non-cloudy pixel is used as compositing criteria,
+using the cloud and cloud shadow masks from the Sentinel-2 SCL layer.
 
-The `stac2video.py` utility can be used to prepare videos from Sentinel-2 imagery. The utility also creates a `videos.geojson` file, which will be used by the frontend to place the videos on the map.
+The key input the user needs to specify is location, a date range, and the
+number of tiles to create at a specified zoom level around the center point.
+The output of the script will be written to a local folder that is also 
+specified by the user.
 
-The utility will create videos from bi-weekly composites. Each frame in the video will be imagery from a two-weeks interval, where the least cloudy pixel is selected for the imagery from each two weeks.
+In addition to the video files, the utility also creates a valid geojson file
+called `videos.geojson`. This file will be used by the frontend application
+to place the video tiles on the map and to track some metadata about the
+imagery used for the videomap creation.
 
-The key input the user needs to specify is location, a date range, and the number of tiles to create at a specified zoom level. The output of the script will be written to a local folder that is also specified by the user.
-
-The following shows a list of the input parameters
+To install the command line utility, checkout the repo and then use pip
+to install the script into your python environment.
 
 ```
->>> stac2video.py --help
+pip install -e .
+```
+
+The following example will create a videomap with 5x3 tiles at zoom level 12
+with monthly image composites.
+
+
+```
+stac2video --dst=/path/to/existing/folder/videos --coordx=-9.15032 --coordy=38.72595 --start=2023-01-01 --end=2023-05-01 --zoom=12 --width=5 --height=3 --interval=1M
+```
+
+Use the help function to obtain a full list of the input parameters
+
+```
+>>> stac2video --help
 Usage: stac2video.py [OPTIONS]
 
 Options:
@@ -68,23 +92,10 @@ Options:
                     videos. The default resolution is 256x256 pixels. Up works
                     as multiplier. For instance, for up=1, the resolution of
                     the video will be 512x512 pixels, and up=2 it will be
-                    1024x1024 px
+                    1024x1024 pixels
   --images          Output each frame as png image as well
   --keep-mp4        Keep intermediary mp4 files
   --help            Show this message and exit.
-```
-
-And one example is the following:
-
-
-```
-./stac2video.py --dst=/path/to/exiting/folder/videos --coordx=-9.15032 --coordy=38.72595 --start=2023-01-01 --end=2023-05-01 --zoom=12 --width=5 --height=3
-```
-
-The required python packages can be installed using the requirements file
-
-```
-pip install -r requirements.txt
 ```
 
 ### Deploying the data
